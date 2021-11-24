@@ -49,7 +49,7 @@ nines = train_patterns(:,nines_index);
 %% SVD Algorithm
 
 %%% Using k largest left singular vectors as approximate bases (Training)
-k = 5
+k = 20
 [U_0 S_0 V_0] = svds(zeros, k, 'largest')
 [U_1 S_1 V_1] = svds(ones, k, "largest")
 [U_2 S_2 V_2] = svds(twos, k, "largest")
@@ -81,7 +81,7 @@ imshow(zeromatApprox')
 
 %% Classification (for single vector)
 
-v = eights_test(:, 10) % Test Vector of handwritten digit
+v = eights(:, 10) % Test Vector of handwritten digit
 res0 = norm(v-U_0*U_0'*v, 2)
 res1 = norm(v-U_1*U_1'*v, 2)
 res2 = norm(v-U_2*U_2'*v, 2)
@@ -147,7 +147,7 @@ eights_test = test_patterns(:,eigths_index_test);
 nines_test = test_patterns(:,nines_index_test);
 
 testMat = [zeros_test ones_test twos_test threes_test fours_test fives_test sixs_test sevens_test eights_test nines_test]
-trueClass = [1:size(zeros_test, 2) 1:size(ones_test, 2) 1:size(twos_test, 2) 1:size(threes_test, 2) 1:size(fours_test, 2) 1:size(fives_test, 2) 1:size(sixs_test, 2) 1:size(sevens_test, 2) 1:size(eights_test, 2) 1:size(nines_test, 2)]
+trueClass = [repelem(0, size(zeros_test, 2)) repelem(1, size(ones_test, 2)) repelem(2, size(twos_test, 2)) repelem(3, size(threes_test, 2)) repelem(4, size(fours_test, 2)) repelem(5, size(fives_test, 2)) repelem(6, size(sixs_test, 2)) repelem(7, size(sevens_test, 2)) repelem(8, size(eights_test, 2)) repelem(9, size(nines_test, 2))]
 
 predClass = []
 for i=1:size(testMat, 2)
@@ -183,9 +183,9 @@ for i=1:size(testMat, 2)
     classif = 8
     elseif min(residuals) == res9
     classif = 9
+    end
     predClass(i) = classif
-    end 
 end
 
-confusionmat(trueClass, predClass)
+confusionchart(trueClass, predClass)
 
