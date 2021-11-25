@@ -49,7 +49,7 @@ nines = train_patterns(:,nines_index);
 %% SVD Algorithm
 
 %%% Using k largest left singular vectors as approximate bases (Training)
-k = 20
+k = 14
 [U_0 S_0 V_0] = svds(zeros, k, 'largest')
 [U_1 S_1 V_1] = svds(ones, k, "largest")
 [U_2 S_2 V_2] = svds(twos, k, "largest")
@@ -94,8 +94,9 @@ res8 = norm(v-U_8*U_8'*v, 2)
 res9 = norm(v-U_9*U_9'*v, 2)
 
 residuals = [res0 res2 res3 res4 res5 res6 res7 res8 res9]
-
-if min(residuals) == res1
+if min(residuals) == res0
+    classif = 0
+elseif min(residuals) == res1
     classif = 1
 elseif min(residuals) == res2
     classif = 2
@@ -166,23 +167,25 @@ for i=1:size(testMat, 2)
     residuals = [res0 res2 res3 res4 res5 res6 res7 res8 res9]
 
     if min(residuals) == res1
-    classif = 1
+        classif = 1
+    elseif min(residuals) == res0
+        classif = 0
     elseif min(residuals) == res2
-    classif = 2
+        classif = 2
     elseif min(residuals) == res3
-    classif = 3
+        classif = 3
     elseif min(residuals) == res4
-    classif = 4
+        classif = 4
     elseif min(residuals) == res5
-    classif = 5
+        classif = 5
     elseif min(residuals) == res6
-    classif = 6
+        classif = 6
     elseif min(residuals) == res7
-    classif = 7
+        classif = 7
     elseif min(residuals) == res8
-    classif = 8
+        classif = 8
     elseif min(residuals) == res9
-    classif = 9
+        classif = 9
     end
     predClass(i) = classif
 end
