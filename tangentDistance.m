@@ -5,7 +5,7 @@ load('usps_resampled.mat');
 testingLabels = [];
 for i = 1:4649
     val = find(test_labels(:,i)==1);
-    testingLabels(end+1) = val-1; %digits 0-9, not 1-10
+    testingLabels(end+1) = val-1;
 end
 
 trainingLabels = [];
@@ -17,14 +17,14 @@ end
 train_labels = testingLabels;
 test_labels = trainingLabels;
 
-train_data = train_patterns(:,1:270);
-test_data = test_patterns(:,1:270);
+train_data = train_patterns(:,1:500);
+test_data = test_patterns(:,1:500);
 
 len_train = length(train_data);
 len_test = length(test_data);
 
 % Calculate result of transformation functions
-
+tic
 p_x_train = [];
 p_y_train = [];
 for i = 1:len_train
@@ -49,11 +49,32 @@ end
 
 % Run TD algorithm
 
-img1vec = p_x_train(1,:);
-img1mat = reshape(img1vec,[16,16]);
+predictions = [];
+for t = 1:len_test
 
-A = [-p_x_train(1,:); p_x_test(1,:)]';
-b = train_data(:,1) - test_data(:,1);
-[x,flag,relres] = lsqr(A, b);
+    residuals = [];
+    for r = 1:len_train
+        A = [-p_x_train(r,:); p_x_test(t,:)]';
+        b = train_data(:,r) - test_data(:,t);
+        [x,flag,relres] = lsqr(A, b);
+  
+        res = (norm(b - A*x))^2;
+        residuals = [residuals res];
+    end
+    
+    [min_resid,index] = min(residuals);
+    disp(min_resid)
+    predictions = [predictions train_labels(index)];
+end
+toc
 
-
+% Calculate accuracy
+correct = 0;
+for i = 1:len_test
+    pred = predictions(i);
+    true = test_labels(i);
+    if pred == true
+        correct = correct + 1;
+    end
+end
+percentage = correct/len_test;
