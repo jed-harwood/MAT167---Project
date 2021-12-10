@@ -118,7 +118,7 @@ for s=1:7
         end
         
         %calculcate how much cluster means changed to determine convergence
-        if sum(oldMeans - newMeans,"all") < tol
+        if sum(abs(oldMeans - newMeans),"all") < tol
             endBool = true;
         else
             oldMeans = newMeans;
@@ -142,7 +142,6 @@ for s=1:7
         class_kmeans(i) = label;
     end
 
-    end
     %label index cluster for each data point as the corresponding digit 
     test_class_kmeans = NaN(1,4649); 
     for i=1:4649 
@@ -156,10 +155,10 @@ for s=1:7
     %accuracy: number correctly classified (diagonal) / total
     accuracy_percent_kmeans = (sum(diag(confusionMatrix_kmeans))/sum(confusionMatrix_kmeans,"ALL"))*100;
     
-    %confusionchart()
-    
     accuracies(s) = accuracy_percent_kmeans;
 end
+
+
 
 accuracies
 runtime
