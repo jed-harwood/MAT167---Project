@@ -1,4 +1,4 @@
-# Handwritted Digit Classification
+# Handwritten Digit Classification
 
 This is a term project for MAT167:Applied Linear Algebra, Fall 2021. 
 All computations are performed on MATLAB.
