@@ -1,0 +1,43 @@
+% Get data ready
+
+load('usps_resampled.mat');
+
+testingLabels = [];
+for i = 1:4649
+    val = find(test_labels(:,i)==1);
+    testingLabels(end+1) = val-1;
+end
+
+trainingLabels = [];
+for i = 1:4649
+    val = find(train_labels(:,i)==1);
+    trainingLabels(end+1) = val-1;
+end
+
+train_labels = testingLabels;
+test_labels = trainingLabels;
+
+train_data = train_patterns(:,1:500);
+test_data = test_patterns(:,1:500);
+
+len_train = length(train_data);
+len_test = length(test_data);
+
+% smooth images using gaussian kernel
+smooth_train = [];
+for i = 1:len_train
+    original = train_data(:,i);
+    reshaped = reshape(original,[16,16]);
+    smoothed = imgaussfilt(reshaped,.5);
+    flat_smoothed = reshape(smoothed,[256,1]);
+    smooth_train = [smooth_train flat_smoothed];
+end
+ 
+smooth_test = [];
+for i = 1:len_test 
+    original = test_data(:,i);
+    reshaped = reshape(original,[16,16]);
+    smoothed = imgaussfilt(reshaped,.5);
+    flat_smoothed = reshape(smoothed,[256,1]);
+    smooth_test = [smooth_test flat_smoothed];
+end

@@ -17,8 +17,8 @@ end
 train_labels = testingLabels;
 test_labels = trainingLabels;
 
-train_data = train_patterns(:,1:500);
-test_data = test_patterns(:,1:500);
+train_data = train_patterns(:,1:4649);
+test_data = test_patterns(:,1:4649);
 
 len_train = length(train_data);
 len_test = length(test_data);
@@ -78,3 +78,5 @@ for i = 1:len_test
     end
 end
 percentage = correct/len_test;
+
+confusionchart(test_labels(:,1:4649), predictions)

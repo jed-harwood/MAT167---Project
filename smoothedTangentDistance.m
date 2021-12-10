@@ -18,12 +18,31 @@ train_labels = testingLabels;
 test_labels = trainingLabels;
 
 train_data = train_patterns(:,1:500);
-test_data = test_patterns(:,1:4649);
+test_data = test_patterns(:,1:500);
 
 len_train = length(train_data);
 len_test = length(test_data);
 
+% Smooth images using gaussian kernel
+
+smooth_train = [];
+for i = 1:len_train
+    image = reshape(train_data(:,1),[16,16]);
+    smoothed = imgaussfilt(image,.9);
+    flattened = reshape(smoothed,[256,1]);
+    smooth_train = [smooth_train flattened];
+end
+ 
+smooth_test = [];
+for i = 1:len_test
+    image = reshape(test_data(:,1),[16,16]);
+    smoothed = imgaussfilt(image,2);
+    flattened = reshape(smoothed,[256,1]);
+    smooth_test = [smooth_test flattened];
+end
+
 % Calculate result of transformation functions
+
 tic
 p_x_train = [];
 p_y_train = [];
@@ -59,7 +78,7 @@ for t = 1:len_test
         [x,flag,relres] = lsqr(A, b);
   
         res = (norm(b - A*x))^2;
-        residuals = [residuals res];
+        residuals = [residuals relres];
     end
     
     [min_resid,index] = min(residuals);
@@ -78,3 +97,5 @@ for i = 1:len_test
     end
 end
 percentage = correct/len_test;
+
+confusionchart(test_labels(:,1:500), predictions)
